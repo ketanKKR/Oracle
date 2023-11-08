@@ -662,3 +662,246 @@ PINCODE NUMBER(6));
 
 6)Remove a view Branch_Master from database
 -> DROP VIEW BRANCH_MASTER;
+
+---------------------------------------------------------------------------------------------------
+
+DAY_12
+
+Emloyee (EmpNo, Ename, Salary, Designation)
+Dept (EmpNo, DeptNo) 
+
+1)Display all rows for salary greater than 5000.
+-> SELECT * FROM EMP WHERE SAL>5000;
+
+2)Display the deptno for the name ‘shyam’.
+-> SELECT DEPTNO FROM EMP WHERE ENAME='Shyam';
+
+3)Add a new column DeptName in Dept table.
+-> ALTER TABLE DEPT ADD DEPT_NAME VARCHAR(15);
+
+4)Change the designation of ename=’ram’ from ‘clerk’ to ‘senior clerk’.
+-> UPDATE EMP SET JOB='SENIOR CLERK' WHERE ENAME='Ram';
+
+5)Find the total salary of all the rows.
+-> SELECT SUM(SAL) AS TOTAL_SALARY FROM EMP;
+
+6)Display EmpNo, Ename, DeptNo, DeptName.
+-> SELECT E.EMPNO,E.ENAME,D.DEPTNO,D.DEPT_NAME FROM EMP E,DEPT D WHERE E.DEPTNO=D.DEPTNO;
+
+7)Drop the table Employee.
+-> DROP TABLE EMP;
+
+
+Student (StuNo,sname,marks,college)
+Course (StuNo,CourseId)
+
+1)Display all rows for student greater than 80.
+-> SELECT S.*,C.PASS_MARKS FROM STUDENT S,COURSE C WHERE PASS_MARKS>80 AND S.ROLLNO=C.ROLL_NO;
+
+2)Display the CouseId for the name ‘shyam’.
+-> 
+
+3)Add a new column CollegeName in Course table.
+-> ALTER TABLE COURSE ADD COLLAGENAME VARCHAR(25);
+
+4)Change the college of sname=’ram’ from ‘LJ’ to ‘new LJ’.
+-> 
+
+5)Find the total marks of all the rows.
+-> SELECT SUM(PASS_MARKS) AS TOTAL_MARKS FROM COURSE;
+
+6)Display StuNo,sname,CoursId,CourseName.
+-> SELECT S.ROLLNO,S.FNAME || ' ' || S.LNAME AS SNAME,C.COURSE_NO,COURSE_NAME FROM STUDENT S,COURSE C WHERE S.ROLLNO=C.ROLL_NO;
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+
+DAY_13
+
+
+1)Print a static string “Hello Every One…!” using an anonymous PLSQL block and execute  it.
+BEGIN
+   DBMS_OUTPUT.PUT('Hello Every One…!');
+END;
+/
+
+2)Write a PLSQL block to display a greeting message like: “Hi!! Today is 3rd November 2021, Friday.
+BEGIN
+   DBMS_OUTPUT.PUT_LINE('Hi!! Today is 3rd November 2021, Friday');
+END;
+/
+
+
+3)Declare a string variable to store student’s name, define three integer variables to store marks of 3 subjects (out of 50) of that student. Write a PLSQL code to calculate total of  all three subjects and print the result in percentage.
+DECLARE
+    SNAME VARCHAR(25);
+    SUBJECT1 INTEGER;
+    SUBJECT2 INTEGER;
+    SUBJECT3 INTEGER;
+    TOTAL_MARKS NUMBER(10);
+    PERCENTAGE NUMBER(10);
+BEGIN
+    SNAME:='&SANME';
+    SUBJECT1:=&SUBJECT1;
+    SUBJECT2:=&SUBJECT2;
+    SUBJECT3:=&SUBJECT3;
+    TOTAL_MARKS := SUBJECT1+SUBJECT2+SUBJECT3;
+    PERCENTAGE := TOTAL_MARKS/3;
+
+    DBMS_OUTPUT.PUT_LINE('STUDENT NAME: '||SNAME);
+    DBMS_OUTPUT.PUT_LINE('SUBJECT 1: '||SUBJECT1);
+    DBMS_OUTPUT.PUT_LINE('SUBJECT 2: '||SUBJECT2);
+    DBMS_OUTPUT.PUT_LINE('SUBJECT 3: '||SUBJECT3);
+    DBMS_OUTPUT.PUT_LINE('TOTAL MARKS: '||TOTAL_MARKS);
+    DBMS_OUTPUT.PUT_LINE('PERCENTAGE: '||PERCENTAGE);
+END;
+/
+
+DBMS_OUTPUT.PUT_LINE('');
+    DBMS_OUTPUT.PUT_LINE('STUDENT NAME SUBJECT1 SUBJECT2 SUBJECT3 TOTAL_MARKS');
+    DBMS_OUTPUT.PUT_LINE('============================================================');
+    DBMS_OUTPUT.PUT_LINE(SNAME || SUBJECT1 || SUBJECT2 || SUBJECT3 || TOTAL_MARKS);
+
+
+
+4)Write a program to divide 2 numbers and if the denominator if 0 then handle the exception.
+DECLARE
+    NUM1 NUMBER(5);
+    NUM2 NUMBER(5);
+    ANS NUMBER(5);
+BEGIN
+    NUM1 := &NUM1;
+    NUM2 := &NUM2;
+    ANS := NUM1/NUM2;
+
+    DBMS_OUTPUT.PUT_LINE('ANSWER: '||ANS);
+END;
+/
+
+
+
+5)Write a user defined exception for above program 3 where if marks are less than 0 then appropriate error message must be shown as exception.
+DECLARE
+    SNAME VARCHAR(25);
+    SUBJECT1 INTEGER;
+    SUBJECT2 INTEGER;
+    SUBJECT3 INTEGER;
+    TOTAL_MARKS NUMBER(10);
+    PERCENTAGE NUMBER(10);
+    MARKS_CHECK EXCEPTION;
+BEGIN
+    SNAME:='&SANME';
+    SUBJECT1:=&SUBJECT1;
+    SUBJECT2:=&SUBJECT2;
+    SUBJECT3:=&SUBJECT3;
+    TOTAL_MARKS := SUBJECT1+SUBJECT2+SUBJECT3;
+    PERCENTAGE := TOTAL_MARKS/3;
+
+    IF SUBJECT1<0 OR SUBJECT2<0 OR SUBJECT3<0 THEN
+        RAISE MARKS_CHECK;
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('STUDENT NAME: '||SNAME);
+        DBMS_OUTPUT.PUT_LINE('SUBJECT 1: '||SUBJECT1);
+        DBMS_OUTPUT.PUT_LINE('SUBJECT 2: '||SUBJECT2);
+        DBMS_OUTPUT.PUT_LINE('SUBJECT 3: '||SUBJECT3);
+        DBMS_OUTPUT.PUT_LINE('TOTAL MARKS: '||TOTAL_MARKS);
+        DBMS_OUTPUT.PUT_LINE('PERCENTAGE: '||PERCENTAGE);
+    END IF;
+
+    EXCEPTION
+        WHEN MARKS_CHECK THEN
+            DBMS_OUTPUT.PUT_LINE('Please Enter a Valid Marks!');         
+END;
+/
+
+
+6)Write a PLSQL block to find the largest of three numbers
+DECLARE
+    NUM1 NUMBER(5);
+    NUM2 NUMBER(5);
+    NUM3 NUMBER(5);
+BEGIN
+    NUM1 := &NUM1;
+    NUM2 := &NUM2;
+    NUM3 := &NUM3;
+
+    IF NUM1>NUM2 AND NUM1>NUM3 THEN
+        DBMS_OUTPUT.PUT_LINE('LARGEST NUMBER IS: '||NUM1);
+    ELSIF NUM2>NUM1 AND NUM2>NUM3 THEN
+        DBMS_OUTPUT.PUT_LINE('LARGEST NUMBER IS: '||NUM2);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('LARGEST NUMBER IS: '||NUM3);
+    END IF;
+END;
+/
+
+
+------------------------------------------------------------------------------------------------------------------
+
+DAY_14
+
+1) Write a PLSQL block to print all the prime numbers between 1 to 50
+DECLARE
+    PRIME NUMBER(2);
+    I NUMBER;
+BEGIN
+    PRIME := 2;
+    I:=1;
+
+    FOR I IN 2..50/2
+    LOOP
+        IF MOD(PRIME,2)=0 THEN
+            DBMS_OUTPUT.PUT_LINE('');
+        ELSE
+            DBMS_OUTPUT.PUT_LINE(PRIME);
+        END IF;
+    PRIME := PRIME+1;
+    END LOOP;
+END;
+/
+
+2) Display all the integer numbers between 4 to 40 which are divisible by 3 using “Exit When” statement.
+DECLARE
+    NUM NUMBER(2);
+BEGIN
+    NUM := 4;
+
+    LOOP
+        IF MOD(NUM, 3) = 0 THEN
+            DBMS_OUTPUT.PUT_LINE(NUM);
+        END IF;
+        NUM := NUM+1;
+    EXIT WHEN NUM>40;
+    END LOOP;
+END;
+/
+
+3) Implement a PL/SQL Block which takes input number of rows and displays triangle.
+*
+**
+***
+****
+*****
+
+DECLARE
+    COLS NUMBER(1);
+    ROWS NUMBER(1);
+BEGIN
+    COLS := 0;
+    ROWS := 0;
+
+    LOOP
+        COLS := 0;
+        LOOP
+            DBMS_OUTPUT.PUT('* ');
+            COLS := COLS+1;
+        EXIT WHEN COLS>ROWS;
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE('');
+        ROWS := ROWS+1;
+    EXIT WHEN ROWS=6;
+    END LOOP;
+END;
+/
+
+
