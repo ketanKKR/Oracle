@@ -147,11 +147,59 @@ PRODUCT_RATE INT);
 
 DAY_3
 
-1)CREATE TABLE CLIENTS AS SELECT * FROM CLIENT_MASTER;
-2)INSERT INTO CLIENTS SELECT * FROM CLIENT_MASTER;
-3)CREATE TABLE PRODUCTS AS SELECT * FROM PRODUCT_MASTER;
-4)INSERT INTO PRODUCTS SELECT * FROM PRODUCT_MASTER WHERE P_NO IN ('P001','P002');
-5)
+1) Create a table called “Clients” from the “Client_Master” table.
+->CREATE TABLE CLIENT AS SELECT * FROM CLIENT_MASTER
+
+
+2) Insert all records of “Client_Master” into “Clients”
+->INSERT INTO CLIENT SELECT * FROM CLIENT_MASTER
+
+
+3) Create table “Products” from “Product_master”
+->CREATE TABLE PRODUCTS AS SELECT * FROM PRODUCT_MASTER
+
+
+4) Copy only selected Product’s information into “Products” table.
+->CREATE TABLE PRODUCTSS AS SELECT P_NO, DESCRIPTION, UNIT,QTY_HAND FROM PRODUCTS
+
+
+5) Create table “Salesman” from Salesman_Master” where “Salesman” table contains
+fields: Salesman number, Name, Address1, City, Target_Get, Achieved_Target
+->CREATE TABLE SALESMAN AS SELECT S_NO,NAME,ADD1,CITY,TARGET FROM SALESMAN_MASTER
+
+
+6) Insert all records for the fields in new table from “Salesman_Master” table
+->INSERT INTO SALESMAN SELECT S_NO,NAME,ADD1,CITY,TARGET FROM SALESMAN_MASTER
+
+
+7) Create an “Order_Master” table form “Sales_Order” Tabl
+->CREATE TABLE ORDER_MASTER AS SELECT * FROM SALES_ORDER
+
+
+8) Insert appropriate records in “Order_Master” from Sales_Order” table
+->INSERT INTO ORDER_MASTER SELECT  * FROM SALES_ORDER;
+
+
+9) Create “Order_Detail” table from “Sales_Order_Detail” table
+->CREATE TABLE ORDER_DETAIL AS SELECT * FROM SALES_ORDER_DETAILS;
+
+
+
+10) Insert appropriate records in “Order_Detail” from Sales_Order_ Detail” table.
+->INSERT INTO ORDER_DETAIL SELECT * FROM SALES_ORDER_DETAILS
+
+
+11) Destroy tables: Client_Master, Product_Master and Salesman_Master table using Truncate
+->TRUNCATE TABLE client_master
+->TRUNCATE TABLE Product_Master
+->TRUNCATE TABLE Salesman_Master
+
+12) Destroy tables: “Sales_Order” and Sales_Order_Details using drop operation
+->DROP TABLE  sales_order;
+
+
+
+
 
 ----------------------------------------------------------------------------------------------------------------
 
@@ -292,6 +340,64 @@ INSERT INTO EMPLOYEE_MASTER VALUES ('E104','Raj',398006,'','28-FEB-2000','Abad',
 
 
 ------------------------------------------------------------------------------------------------------------------
+DAY_6
+
+A)Use following tables and solve given queries below it.
+    APPLICANT (AID, A_Name, City, B_Date)
+    ENTRANCE_TEST (ET_ID, ET_Name, Max_Score)
+    ETEST_DETAILS (AID, ETID, ETest_Date, Score)
+
+1) How many applicants have appeared for each test
+->SELECT AID,COUNT(*) AS TEST_NO FROM ETEST_DETAIL GROUP BY AID;
+
+2) Display highest score for each test
+->SELECT AID,MAX(SCORE) AS HIGHEST_SCORE FROM ETEST_DETAIL GROUP BY AID;
+
+3) Display applicant’s ID who appeared for more than 3 tests
+->SELECT AID,COUNT(*) AS TEST_NO FROM ETEST_DETAIL GROUP BY AID HAVING COUNT(AID) > 3;
+
+4) Calculate applicant’s average score across all test they have appeared in
+->SELECT ETID,AID,AVG(SCORE) AS AVERAGE_SCORE FROM ETEST_DETAIL GROUP BY AID,ETID;
+
+5) Display number of applicants by city
+->SELECT CITY,COUNT(CITY) AS APPLICANT_NO FROM APPLICANT GROUP BY CITY;
+
+6) Display ETID and Average score where average score is more than 50
+->SELECT ETID,AVG(SCORE) AS AVERAGE_SCORE FROM ETEST_DETAIL GROUP BY ETID HAVING AVG(SCORE) > 50 ORDER BY(ETID) DESC;
+
+7) Count date wise total entrance test to be held
+->SELECT ETEST_DATE,COUNT(ETEST_DATE) AS ETEST_DATE FROM ETEST_DETAIL23 GROUP BY ETEST_DATE;
+
+
+B) Use the following tables and solve below given queries.
+Distributor (Dno, DName, City, Phone)
+Item (Item_No, Item_Name, Price, Weight)
+Dist_Item (Dno, Item_No, Qty, Date)
+
+1)Display city wise total number of distributors
+->SELECT CITY,COUNT(*) AS DISTRIBUTOR_NO FROM DISTRIBUTOR GROUP BY CITY;
+
+2)List distributors’ no by who distributed more than 50 items in month of July
+->SELECT D_NO,TO_CHAR(DIST_DATE,'MON'), SUM(QTY) AS QTY FROM DIST_ITEM GROUP BY D_NO,DIST_DATE HAVING TO_CHAR(DIST_DATE,'MON') LIKE 'JUL' AND SUM(QTY) > 50 ORDER BY(D_NO) ASC;
+
+3)List Item_No with more than 800 Qty delivered
+->SELECT ITEMNO,SUM(QTY) FROM DIST_ITEM GROUP BY ITEMNO,QTY HAVING SUM(QTY) > 800 ORDER BY(ITEMNO) ASC;
+
+4)List Dno who delivered more than 50 items for each month
+->SELECT D_NO,TO_CHAR(DIST_DATE,'MON'), SUM(QTY) AS QTY FROM DIST_ITEM GROUP BY D_NO,TO_CHAR(DIST_DATE,'MON') HAVING SUM(QTY) > 50 ORDER BY(D_NO) ASC;
+
+5)Display item details in descending order of price and ascending order of weight  
+->SELECT ITEM_NO, ITEM_NAME, PRICE, WEIGHT FROM ITEM ORDER BY PRICE DESC, WEIGHT;
+
+6)Show all distributors in alphabetical order of City and DName
+->SELECT * FROM DISTRIBUTOR ORDER BY CITY, DNAME;
+
+7)Calculate average quantity of items distributed on each day.
+->SELECT D_NO,AVG(QTY),TO_CHAR(DIST_DATE,'DD/MM/YYYY') FROM DIST_ITEM GROUP BY D_NO,TO_CHAR(DIST_DATE,'DD/MM/YYYY'),QTY ORDER BY(D_NO);
+
+8)Find the weight wise average price of items.
+->SELECT AVG(PRICE) FROM ITEM WHERE WEIGHT = '150GM';
+-------------------------------------------------------------------------------------------------------------------
 
 DAY_7
 
@@ -841,6 +947,7 @@ END;
 DAY_14
 
 1) Write a PLSQL block to print all the prime numbers between 1 to 50
+
 DECLARE
     PRIME NUMBER(2);
     I NUMBER;
@@ -860,7 +967,9 @@ BEGIN
 END;
 /
 
+
 2) Display all the integer numbers between 4 to 40 which are divisible by 3 using “Exit When” statement.
+
 DECLARE
     NUM NUMBER(2);
 BEGIN
@@ -904,4 +1013,455 @@ BEGIN
 END;
 /
 
+
+4) Write a program to divide 2 numbers and if the denominator if 0 then handle the exception.
+
+DECLARE
+    NO1 NUMBER;
+    NO2 NUMBER;
+    ANSWER NUMBER;
+BEGIN 
+    NO1 := &NOA;
+    NO2 := &NOB;
+    DBMS_OUTPUT.PUT_LINE('THE NO1 IS ' || NO1);
+        DBMS_OUTPUT.PUT_LINE('THE NO2 IS ' || NO2);
+    IF NO2!=0 THEN
+        ANSWER := NO1/NO2;
+        DBMS_OUTPUT.PUT_LINE('THE DIVISION IS ' || ANSWER);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('THE DIVISION IS NOT POSSIBLE');
+    END IF;
+END;
+/
+
+
+5) Write a user defined exception for above program 3 where if marks are less than 0 then  appropriate error message must be shown as exception.
+
+DECLARE
+    NO1 NUMBER;
+    NO2 NUMBER;
+    ANSWER NUMBER;
+    NO_DIVIDE_ZERO EXCEPTION;
+BEGIN
+    NO1 := &NOA;
+    NO2 := &NOB;
+    DBMS_OUTPUT.PUT_LINE('THE NO1 IS ' || NO1);
+    DBMS_OUTPUT.PUT_LINE('THE NO2 IS ' || NO2);
+    IF NO2!=0 THEN
+        ANSWER := NO1/NO2;
+        DBMS_OUTPUT.PUT_LINE('THE DIVISION IS ' || ANSWER);
+    ELSIF NO2=0 THEN
+        RAISE NO_DIVIDE_ZERO;
+    END IF;
+EXCEPTION
+    WHEN NO_DIVIDE_ZERO THEN
+    DBMS_OUTPUT.PUT_LINE('PLEASE INPUT VALID DENOMINATOR');
+END;
+/
+
+
+6) Write a PLSQL block to find the largest of three numbers
+
+DECLARE
+    A NUMBER;
+    B NUMBER;
+    C NUMBER;
+BEGIN
+    A := &NOA;
+    B := &NOB;
+    C := &NOC;
+    IF A > B AND A > C THEN
+        DBMS_OUTPUT.PUT_LINE('A IS THE LARGEST NUMBER ' || A);
+    ELSIF B > A AND B > C THEN
+        DBMS_OUTPUT.PUT_LINE('B IS THE LARGEST NUMBER ' || B);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('C IS THE LARGEST NUMBER ' || C);
+    END IF;
+END;
+/
+
+
+----------------------------------------------------------------------------------------------
+
+DAY_14
+
+1) Write a PLSQL block to print all the prime numbers between 1 to 50
+
+DECLARE
+    I NUMBER;
+    COUNTER NUMBER;
+    K NUMBER;
+    N NUMBER;
+BEGIN
+    FOR N IN 1 .. 100
+    LOOP
+        COUNTER := 0;
+        K := N/2;
+        FOR I IN 2..K
+        LOOP
+            IF(MOD(N, I) = 0) THEN
+                COUNTER := 1;
+            END IF;
+        END LOOP;
+        IF(COUNTER = 0) THEN
+            DBMS_OUTPUT.PUT_LINE(N || ' IS A PRIME NO');
+        END IF;
+    END LOOP;
+END;
+/
+
+2) Display all the integer numbers between 4 to 40 which are divisible by 3 using “Exit When” statement.
+
+DECLARE
+    I NUMBER;
+    J NUMBER;
+BEGIN
+    I := 4;
+    LOOP
+        I := I + 1;
+        IF (I/3) THEN
+            DBMS_OUTPUT.PUT_LINE(I);
+        END IF;
+    EXIT WHEN I <= 40; 
+    END LOOP;
+END;
+/
+
+3) Implement a PL/SQL Block which takes input number of rows and displays triangle.
+*
+**
+***
+****
+*****
+
+DECLARE
+    COLS NUMBER(1);
+    ROWS NUMBER(1);
+BEGIN
+    COLS := 0;
+    ROWS := 0;
+
+    LOOP
+        COLS := 0;
+        LOOP
+            DBMS_OUTPUT.PUT('* ');
+            COLS := COLS+1;
+        EXIT WHEN COLS>ROWS;
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE('');
+        ROWS := ROWS+1;
+    EXIT WHEN ROWS=6;
+    END LOOP;
+END;
+/
+
+-------------------------------------------------------------------------------------
+
+DAY_15
+
+1) Use following tables and write below given PL/SQL blocks.
+
+PRODUCTS (Prod_ID, Prod_Name, Supplier_ID, Cat_ID, Unit, Price)
+ORDER_DETAILS (OrderDetail_ID, Order_ID, Prod_Id, Quantity)
+
+1. Write a PLSQL block to display total number of products ordered in Order_ID = 3
+DECLARE
+    QTY ORDER_DETAIL.QUANTITY%TYPE;
+BEGIN
+    SELECT QUANTITY INTO QTY FROM ORDER_DETAIL WHERE ORDEAR_ID = 003;
+    DBMS_OUTPUT.PUT_LINE(QTY);
+END;
+
+
+2. Write a PLSQL block to update the price (actual price + 5) of product with Id = 2
+DECLARE
+    PRI PRODUCT.PRICE%TYPE;
+BEGIN 
+    UPDATE PRODUCT SET PRICE = 45 WHERE PROD_ID = 'P002';
+    SELECT PRICE INTO PRI FROM PRODUCT WHERE PROD_ID = 'P002';
+    DBMS_OUTPUT.PUT_LINE(PRI);
+END;
+
+
+3. WRITE A PLSQL BLOCK TO DELETE THE PRODUCTS OF CAT_ID = 3
+BEGIN
+    DELETE FROM PRODUCT WHERE CAT_ID = 03;
+END;
+
+
+4. Write a PLSQL block to insert any product whose cat_id = 3
+BEGIN
+    INSERT INTO PRODUCT VALUES();
+END;
+
+5. Write a PLSQL block to display Supplier_Id and their total number of products they supply
+DECLARE 
+    CURSOR CSUP IS SELECT * FROM PRODUCT;
+    CURSOR CORDER(VARPID ORDER_DETAIL.PROD_ID%TYPE) IS SELECT * FROM ORDER_DETAIL WHERE PROD_ID = VARPID;
+BEGIN
+    FOR VARCSUP IN CSUP
+    LOOP
+        DBMS_OUTPUT.PUT_LINE('SUPPLIER ID: ' || VARCSUP.SUPPLIER_ID);
+        DBMS_OUTPUT.PUT('PRODUCT ID: ' || VARCSUP.PROD_ID || '-->');
+            FOR VARCORDER IN CORDER(VARCSUP.PROD_ID)
+            LOOP
+                DBMS_OUTPUT.PUT_LINE('QUANTITY - ' || VARCORDER.QUANTITY);
+            END LOOP;
+    END LOOP;
+END;
+
+--------------------------------------------------------------------------------------------------
+
+DAY_16
+
+(I)
+Create a table Student (R_No, Name, Sub1, Sub2, Sub3, Total, Grade) Insert 10 records in the above table where each subject carries maximum 100 marks. Don’t enter the total and grade manually.
+CREATE TABLE STUDENT(R_NO NUMBER(5),NAME VARCHAR(10),SUB1 NUMBER(3),SUB2 NUMBER(3),SUB3 NUMBER(3));
+
+INSERT INTO STUDENT VALUES(01,'MANAV',50,59,70);
+INSERT INTO STUDENT VALUES(02,'HARSH',79,59,70);
+INSERT INTO STUDENT VALUES(03,'AKSHY',89,25,30);
+INSERT INTO STUDENT VALUES(04,'SIMMI',50,87,40);
+INSERT INTO STUDENT VALUES(05,'SANKET',50,22,12);
+INSERT INTO STUDENT VALUES(06,'DIYA',50,50,50);
+INSERT INTO STUDENT VALUES(07,'DISHA',40,45,45);
+INSERT INTO STUDENT VALUES(08,'VIKAS',12,22,22);
+INSERT INTO STUDENT VALUES(09,'VANITA',69,96,40);
+INSERT INTO STUDENT VALUES(10,'AMISHA',49,59,59);
+
+1. Write a PLSQL block to calculate and update the Total for each and every student.
+DECLARE
+    CURSOR CSTUD IS SELECT * FROM STUDENT;
+    TOT NUMBER;
+BEGIN
+    FOR VARCSTUD IN CSTUD
+    LOOP
+        TOT := 0;
+        DBMS_OUTPUT.PUT_LINE('ROLL_NO - ' || VARCSTUD.R_NO);
+        DBMS_OUTPUT.PUT_LINE('SUB1 - ' || VARCSTUD.SUB1);
+        DBMS_OUTPUT.PUT_LINE('SUB2 - ' || VARCSTUD.SUB2);
+        DBMS_OUTPUT.PUT_LINE('SUB3 - ' || VARCSTUD.SUB3);
+        TOT := TOT + VARCSTUD.SUB1 + VARCSTUD.SUB2 + VARCSTUD.SUB3;
+        DBMS_OUTPUT.PUT_LINE('TOTAL MARKS - ' || TOT);
+        DBMS_OUTPUT.PUT_LINE('-------------------');
+        UPDATE STUDENT SET TOTAL = TOT WHERE R_NO = VARCSTUD.R_NO;
+    END LOOP;
+END;
+
+
+2. Calculate the grade of all students, based to total (>70 AA, >60 A, >50 B, >35 C, else Fail)
+declare 
+    cursor cstud is select * from student;
+    grd varchar(5);
+begin
+    for varcstud in cstud
+    loop
+        dbms_output.put_line('total - ' || varcstud.total);
+        if varcstud.total > 280 then
+            grd := 'AA';
+        elsif varcstud.total > 250 then
+            grd := 'A';
+        elsif varcstud.total > 200 then
+            grd := 'B';
+        elsif varcstud.total > 150 then
+            grd := 'C';
+        else
+            grd := 'FAIL';
+        end if; 
+        update student set grade = grd where r_no = varcstud.r_no;
+    end loop;
+end;
+
+
+3. Write a Cursor to find the first 3 rankers based on the total marks.
+DECLARE
+    NAME STUDENT.NAME%TYPE;
+    MARKS STUDENT.TOTAL%TYPE;
+    GRADE STUDENT.GRADE%TYPE;
+    CURSOR V1 IS SELECT NAME, TOTAL, GRADE FROM STUDENT ORDER BY TOTAL DESC;
+BEGIN
+    OPEN V1;
+    LOOP
+        FETCH V1 INTO NAME, MARKS, GRADE;
+        EXIT WHEN V1%ROWCOUNT > 4;
+        DBMS_OUTPUT.PUT_LINE(LPAD(NAME,10)||'  '||LPAD(MARKS,5)||'  '||LPAD(GRADE,5));
+    END LOOP;
+    CLOSE V1;
+END;
+
+
+(II)
+1. Add a Salary and Bonus column in the Faculty_Master Table and calculate the bonus of each faculty of “MCA” department which is based on the 5% of their salary. If the salary in less than 25000, then raise the exception.
+DECLARE
+    CURSOR C1 IS SELECT * FROM F_MASTER;
+    BNS NUMBER(10);
+    SALBNS NUMBER(10);
+BEGIN
+    BNS := 0;
+    FOR C IN C1
+    LOOP
+        DBMS_OUTPUT.PUT_LINE('SALARY --> ' || C.SALARY);
+            IF C.SALARY > 25000 THEN
+                BNS := C.SALARY * 0.05;
+            END IF;
+        DBMS_OUTPUT.PUT_LINE(BNS);
+        SALBNS := BNS + C.SALARY;
+        DBMS_OUTPUT.PUT_LINE(SALBNS);
+        UPDATE F_MASTER SET BONUS = SALBNS WHERE F_NO = C.F_NO;
+        COMMIT;
+        BNS := 0;
+    END LOOP;
+END;
+
+2. Display name of 2 faculties getting maximum bonus.
+DECLARE 
+    NAME F_MASTER.FNAME%TYPE;
+    BONUS F_MASTER.BONUS%TYPE;
+    CURSOR C1 IS SELECT FNAME, BONUS FROM F_MASTER WHERE BONUS IS NOT NULL ORDER BY BONUS DESC;  
+BEGIN
+   OPEN C1;
+   LOOP 
+        FETCH C1 INTO NAME, BONUS;
+        EXIT WHEN C1%ROWCOUNT > 2;
+        DBMS_OUTPUT.PUT_LINE('FACULTY NAME - ' || NAME);  
+        DBMS_OUTPUT.PUT_LINE('BONUS - ' || BONUS);
+        DBMS_OUTPUT.PUT_LINE('---------');
+   END LOOP;
+   CLOSE C1;
+END;
+
+
+(III)
+Use following tables are create a report as shown below. supplier (sid, sname, contactnum)
+parts (pid, pname, color, unitrate)
+catalog (sid, pid, qty) [primary key(sid,pid)]
+Write a PLSQl Cursor to take a supplier’s name as an input from the user and prepare a
+report in the following format: 
+***********************************************************
+        PART ID PART NAME QUANTITY UNIT PRICE TOTAL
+************************************************************
+                                                Grand Total:
+Raise a user defined exception when the supplier’s name not found in the database table.
+
+DECLARE
+   TOTAL NUMBER;
+   GRANDTOTAL NUMBER := 0;
+   NAME SUPPLIER.SNAME%TYPE;
+   CURSOR C1(NAME SUPPLIER.SNAME%TYPE) IS SELECT PARTS.PID, PARTS.PNAME, QTY, RATE FROM CATALOG1 JOIN PARTS
+   ON 
+   PARTS.PID = CATALOG1.PID
+   JOIN SUPPLIER
+   ON 
+   SUPPLIER.SID = CATALOG1.SID
+   WHERE SUPPLIER.SNAME LIKE NAME;
+BEGIN
+   NAME := '&SUPPLIER_NAME';
+   FOR V1 IN C1(NAME)
+   LOOP
+   TOTAL := V1.QTY * V1.RATE;
+   GRANDTOTAL := GRANDTOTAL + TOTAL;
+   DBMS_OUTPUT.PUT_LINE(LPAD(V1.PID,10)||LPAD(V1.PNAME,10)||LPAD(V1.QTY,10)||LPAD(V1.RATE,10)||LPAD(TOTAL,10)||LPAD(GRANDTOTAL,10));
+   END LOOP;
+END;
+
+------------------------------------------------------------------------------------------------------------------------
+
+DAY_17
+
+1) Write a procedure which will take Faculty ID as an input and will display all the information of that faculty
+CREATE OR REPLACE PROCEDURE FMASTER
+(FNO IN F_MASTER.F_NO%TYPE)
+IS
+NAME F_MASTER.FNAME%TYPE;
+SAL F_MASTER.SALARY%TYPE; 
+BEGIN
+    SELECT FNAME,SALARY INTO NAME,SAL FROM F_MASTER WHERE F_NO = FNO;
+    DBMS_OUTPUT.PUT_LINE(NAME);
+    DBMS_OUTPUT.PUT_LINE(SAL);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('ERROR - FACULTY NUMBER NOT FOUND');
+END;
+
+
+2) Write a stored procedure that uses an INOUT parameter and an IN parameter. The user will supply 'M' or 'F' through IN parameter (emp_gender) to count a number of male or  female from Employee table. The INOUT parameter (mfgender) will return the result to a user.
+CREATE TABLE EMP(ENO NUMBER(4),ENAME VARCHAR(10),GENDER VARCHAR(1),SALARY NUMBER(5),CHECK (GENDER IN('M','F')));
+
+INSERT INTO EMP VALUES(1,'MANAV','M',50000);
+INSERT INTO EMP VALUES(2,'SANKET','M',70000);
+INSERT INTO EMP VALUES(3,'HARSH','M',80000);
+INSERT INTO EMP VALUES(4,'DIYA','F',5000);
+INSERT INTO EMP VALUES(5,'ISHA','F',9000);
+INSERT INTO EMP VALUES(6,'MAYUR','M',9000);
+
+CREATE OR REPLACE PROCEDURE EMPGEN
+(GEN IN OUT EMP.GENDER%TYPE) IS
+BEGIN
+    SELECT COUNT(GENDER) INTO GEN FROM EMP WHERE GENDER = GEN; 
+END;
+
+DECLARE 
+    GN EMP.GENDER%TYPE;
+BEGIN
+    GN := '&GENDER';
+    EMPGEN(GN);
+    DBMS_OUTPUT.PUT_LINE(GN);
+END;
+
+3) Write a procedure which will take minimum limit and maximum limit of salary and the execution of the procedure will display name of the employees having salary between the range.
+
+CREATE OR REPLACE PROCEDURE PSALARY
+(FNO IN F_MASTER.F_NO%TYPE)
+IS
+ NAME F_MASTER.FNAME%TYPE;
+ SAL F_MASTER.SALARY%TYPE;
+BEGIN
+    SELECT FNAME,SALARY INTO NAME,SAL FROM F_MASTER WHERE F_NO = FNO;
+    IF (SAL > 15000 AND SAL <75000) THEN
+    DBMS_OUTPUT.PUT_LINE(NAME);
+    DBMS_OUTPUT.PUT_LINE(SAL);
+    ELSE
+    RAISE NO_DATA_FOUND;
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('ERROR - DATA NOT FOUND');
+END;
+
+
+CREATE OR REPLACE PROCEDURE PSALARY
+(FNO IN F_MASTER.F_NO%TYPE)
+IS
+ NAME F_MASTER.FNAME%TYPE;
+ SAL F_MASTER.SALARY%TYPE;
+BEGIN
+    SELECT FNAME,SALARY INTO NAME,SAL FROM F_MASTER WHERE F_NO = FNO;
+    IF (SAL > 15000 AND SAL <75000) THEN
+    DBMS_OUTPUT.PUT_LINE(NAME);
+    DBMS_OUTPUT.PUT_LINE(SAL);
+    ELSE
+    RAISE NO_DATA_FOUND;
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('ERROR - DATA NOT FOUND');
+END;
+
+CREATE OR REPLACE PROCEDURE PSALARY
+(FNO IN F_MASTER.F_NO%TYPE)
+IS
+ NAME F_MASTER.FNAME%TYPE;
+ SAL F_MASTER.SALARY%TYPE;
+BEGIN
+    SELECT FNAME,SALARY INTO NAME,SAL FROM F_MASTER WHERE F_NO = FNO;
+    IF (SAL > 15000 AND SAL <75000) THEN
+    DBMS_OUTPUT.PUT_LINE(NAME);
+    DBMS_OUTPUT.PUT_LINE(SAL);
+    ELSE
+    RAISE NO_DATA_FOUND;
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('ERROR - DATA NOT FOUND');
+END;
 
